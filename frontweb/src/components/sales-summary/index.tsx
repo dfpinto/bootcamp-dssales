@@ -6,7 +6,8 @@ import { ReactComponent as BarChartIcon } from '../../assets/bar-chart-icon.svg'
 import './styles.css';
 import { FilterData, SalesSummaryDTO } from '../../types';
 import { useEffect, useMemo, useState } from 'react';
-import { buildFilterParams, makeRequest } from '../../utils/request';
+import { makeRequest } from '../../utils/request';
+import { buildFilterParams } from '../filter/helpers';
 
 type Props = {
   filterData?: FilterData;

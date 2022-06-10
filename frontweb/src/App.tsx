@@ -5,11 +5,41 @@ import SalesByDate from './components/sales-by-date';
 import SalesSummary from './components/sales-summary';
 import PieChartCard from './components/pie-chart-card';
 import SalesTable from './components/sales-table';
-import { useState } from 'react';
-import { FilterData } from './types';
+import { useEffect, useMemo, useState } from 'react';
+import { FilterData, PieChartParams, SalesByPaymentMethodDTO, SalesByStoreDTO } from './types';
+import { makeRequest } from './utils/request';
+import { buildFilterParams } from './components/filter/helpers';
+import { buildSalesByPaymentMethod, buildSalesByStore } from './helpers';
 
 function App() {
   const [filterData, setFilterData] = useState<FilterData>();
+  const [salesByStore, setSalesByStore] = useState<PieChartParams>();
+  const [salesByPaymentMethod, setSalesByPaymentMethod] = useState<PieChartParams>();
+
+  const params = useMemo(() => buildFilterParams(filterData), [filterData]);
+
+  useEffect(() => {
+    makeRequest
+      .get<SalesByStoreDTO[]>('/sales/by-store', { params })
+      .then((response) => {
+        setSalesByStore(buildSalesByStore(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [params]);
+
+  useEffect(() => {
+    makeRequest
+      .get<SalesByPaymentMethodDTO[]>('/sales/by-payment-method', { params })
+      .then((response) => {
+        setSalesByPaymentMethod(buildSalesByPaymentMethod(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [params]);
+
   const onFilterChange = (filter: FilterData) => {
     setFilterData(filter);
   };
@@ -21,19 +51,15 @@ function App() {
         <SalesByDate filterData={filterData} />
         <div className="sales-overview-container">
           <SalesSummary filterData={filterData} />
+          <PieChartCard labels={salesByStore?.labels} name="Lojas" series={salesByStore?.series} />
           <PieChartCard
-            labels={['Uberlândia', 'Araguari', 'Uberaba']}
-            name="Lojas"
-            series={[40, 30, 30]}
-          />
-          <PieChartCard
-            labels={['Crêdito', 'Débito', 'Dinheiro']}
+            labels={salesByPaymentMethod?.labels}
             name="Pagamento"
-            series={[20, 50, 30]}
+            series={salesByPaymentMethod?.series}
           />
         </div>
         <div>
-          <SalesTable />
+          <SalesTable filterData={filterData} />
         </div>
       </div>
     </>

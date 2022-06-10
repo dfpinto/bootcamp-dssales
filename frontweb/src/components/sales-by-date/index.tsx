@@ -2,9 +2,10 @@ import './styles.css';
 import ReactApexChart from 'react-apexcharts';
 import { buildChartSeries, chartOptions, sumSalesByDate } from './helpers';
 import { useEffect, useMemo, useState } from 'react';
-import { buildFilterParams, makeRequest } from '../../utils/request';
+import { makeRequest } from '../../utils/request';
 import { ChartSeriesData, FilterData, SalesByDateDTO } from '../../types';
 import { formatDate, formatPrice } from '../../utils/formatters';
+import { buildFilterParams } from '../filter/helpers';
 
 type Props = {
   filterData?: FilterData;

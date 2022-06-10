@@ -22,3 +22,33 @@ export type SalesSummaryDTO = {
   avg: number;
   count: number;
 };
+
+export type SalesByStoreDTO = {
+  storeName: string;
+  sum: number;
+};
+
+export type SalesByPaymentMethodDTO = {
+  description: string;
+  sum: number;
+};
+
+export type PieChartParams = {
+  labels: string[];
+  series: number[];
+};
+
+export type SaleResponse = {
+  content: Sale[];
+};
+
+export type Sale = {
+  id: number;
+  date: string;
+  volume: number;
+  total: number;
+  gender: Gender;
+  categoryName: string;
+  paymentMethod: string;
+  storeName: string;
+};
