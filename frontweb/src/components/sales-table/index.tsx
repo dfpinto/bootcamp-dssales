@@ -9,10 +9,16 @@ type Props = {
   filterData?: FilterData;
 };
 
+const extraParams = {
+  page: 0,
+  size: 12,
+  sort: 'date,desc' // 12 últimas vendas
+};
+
 function SalesTable({ filterData }: Props) {
   const [sales, setSales] = useState<Sale[]>([]);
 
-  const params = useMemo(() => buildFilterParams(filterData), [filterData]);
+  const params = useMemo(() => buildFilterParams(filterData, extraParams), [filterData]);
 
   useEffect(() => {
     makeRequest
